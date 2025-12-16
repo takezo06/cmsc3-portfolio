@@ -1,0 +1,733 @@
+/* =========================================
+   1. VARIABLES & GLOBAL RESET
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* --- COLOR PALETTE (Dark Mode) --- */
+    --bg-color: #0c0c0c;         /* Deepest Black */
+    --card-bg: #0e0e0e94;        /* Slightly lighter black for cards */
+    --text-primary: #ffffff;     /* Pure White */
+    --text-secondary: #cccccc;   /* Light Gray for body text */
+    --accent-color: #ff6b00;     /* Vibrant Orange */
+
+    /* --- TYPOGRAPHY --- */
+    /* Titles/Headings */
+    --font-title: 'Articulat', sans-serif; 
+    
+    /* Subtitles/Labels/Nav (The "In-Between" Text) */
+    --font-subtitle: 'Coolveltica', sans-serif;
+
+    /* Body/Small Paragraph Text */
+    --font-body: 'Uncut Sans', sans-serif; 
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-body); /* Default to Uncut Sans */
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* =========================================
+   2. BACKGROUND ANIMATION (BLOB)
+   ========================================= */
+body::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vmax;
+    height: 60vmax;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    background: linear-gradient(135deg, var(--accent-color), transparent);
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: -1;
+    animation: drift 20s infinite alternate ease-in-out;
+}
+
+@keyframes drift {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-20%, -20%) rotate(40deg); }
+}
+
+/* =========================================
+   3. NAVIGATION BAR
+   ========================================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.695);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #333;
+    padding: 1rem 2rem;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    font-family: var(--font-title); /* Articulat */
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logo:hover {
+    color: var(--accent-color);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    font-family: var(--font-subtitle); /* Coolveltica for Nav */
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 1rem; /* Slightly larger for Coolveltica readability */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--accent-color);
+}
+
+/* =========================================
+   4. LAYOUT & TYPOGRAPHY
+   ========================================= */
+main {
+    flex: 1;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2rem;
+}
+
+.hero-section {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Global Heading Styles */
+h1, h2, h3, .heading {
+    font-family: var(--font-title); /* Articulat */
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.text-4xl {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+footer {
+    font-family: var(--font-body);
+    text-align: center;
+    padding: 3.5rem;
+    margin-top: 15%;
+    background-color: #000;
+    color: #555;
+    border-top: 1px solid #222;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* =========================================
+   5. COMPONENT: FLIP CARD (PROFILE)
+   ========================================= */
+.card {
+    width: 100%;
+    height: 600px; 
+    perspective: 1000px;
+    margin: 20px auto;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    background-color: var(--card-bg);
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background-color: #111;
+}
+
+/* Flip Card Content Styles */
+.heading {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: none;
+}
+
+.role-tag {
+    font-family: var(--font-subtitle); /* Coolveltica for subtitles */
+    color: #888;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 1.5rem;
+}
+
+.bio-text, .card-back-text {
+    font-family: var(--font-body); /* Uncut Sans for body */
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 85%;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.profile-photo {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color);
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+}
+
+.card-back a {
+    font-family: var(--font-subtitle); /* Coolveltica for buttons */
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 10px 25px;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.card-back a:hover {
+    background-color: var(--accent-color);
+    color: #000;
+}
+
+/* =========================================
+   6. COMPONENT: INFO BLOCKS & IMAGES
+   ========================================= */
+.image-container {
+    margin-top: 2rem;
+    border: 1px solid #333;
+    padding: 10px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+}
+
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.info-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-block {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.info-block:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-color);
+}
+
+.info-block h3 {
+    font-family: var(--font-title); /* Articulat */
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.info-block p {
+    font-family: var(--font-body); /* Uncut Sans */
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* =========================================
+   7. TECH STACK (INSIDE INFO WRAPPER)
+   ========================================= */
+.tech-stack-wrapper {
+    --card-w: 320px; 
+    --card-h: 420px;
+    
+    position: relative;
+    width: var(--card-w);
+    height: var(--card-h);
+    
+    margin: 80px auto 40px auto; 
+    perspective: 1000px;
+}
+
+/* Base Tech Card Style */
+.tech-card {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20%;
+    
+    border: 1px solid #333;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: perspective(905px) rotateX(0deg) rotateY(0deg) rotateZ(-8deg);
+    z-index: 1;
+}
+
+/* --- LAYER STYLING --- */
+.tech-card.tech-layer-1 { 
+    top: -50px; 
+    left: -100px; 
+    background: linear-gradient(135deg, #333333 0%, #000000 100%);
+    border-color: #444;
+}
+
+.tech-card.tech-layer-2 { 
+    top: 0px; 
+    left: 0px; 
+    background: linear-gradient(135deg, #a64600 0%, #1a1a1a 100%);
+    border-color: var(--accent-color);
+}
+
+.tech-card.tech-layer-3 { 
+    top: 50px;   
+    left: 100px;    
+    background: var(--card-bg); 
+    border: 1px solid var(--accent-color); 
+}
+
+/* --- INTERACTION --- */
+.tech-card:hover {
+    z-index: 10;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1.05) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+    border-color: #fff;
+    transition: all 0.4s ease-out;
+}
+
+/* --- TECH STACK CONTENT (THE DOOR) --- */
+.tech-content {
+    width: 85%; 
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    background: #0c0c0ce6; 
+    border-right: 2px solid var(--accent-color);
+    backdrop-filter: blur(5px);
+
+    transform-origin: left; 
+    transform: perspective(2000px) rotateY(-90deg);
+    transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.tech-card:hover .tech-content {
+    transform: perspective(2000px) rotateY(0deg);
+}
+
+/* --- TECH TYPOGRAPHY --- */
+.tech-header {
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+
+.tech-header h3 {
+    font-family: var(--font-title); /* Articulat */
+    text-align: left;
+    color: var(--accent-color);
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tech-tag {
+    font-family: var(--font-subtitle); /* Coolveltica for tags */
+    color: #888;
+    font-size: 0.85rem;
+    text-align: left;
+    display: block;
+    margin-top: 5px;
+    font-weight: normal; /* Coolveltica usually has weight baked in */
+}
+
+.tech-list p {
+    font-family: var(--font-body); /* Uncut Sans */
+    text-align: left;
+    color: var(--text-primary);
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+}
+
+.tech-list p::before {
+    content: '›';
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* =========================================
+   8. MEDIA QUERIES (MOBILE)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        margin-top: 1rem;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .card {
+        height: 600px; 
+    }
+    
+    .info-block h3 {
+        width: 100%;
+    }
+    
+    .tech-stack-wrapper {
+        transform: scale(0.9);
+        margin-top: 80px;
+    }
+}
+
+/* =========================================
+   9. CONTACT PAGE: SOCIAL GLASS CARDS
+   ========================================= */
+.container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 40px;
+    
+    transform: scale(1.4); 
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.container:hover {
+    transform: scale(1);
+}
+
+/* The Glass Cards */
+.glass {
+    position: relative;
+    width: 180px;
+    height: 220px;
+    background: linear-gradient(#fff2, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+    
+    margin: 0 -45px;
+    transform: rotate(calc(var(--r) * 1deg));
+}
+
+.container:hover .glass {
+    transform: rotate(0deg);
+    margin: 0 10px;
+}
+
+.glass:hover {
+    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+    box-shadow: 0 0 20px var(--brand-color);
+    border-color: var(--brand-color);
+    z-index: 10;
+}
+
+/* Brand Colors */
+.glass.linkedin  { --brand-color: #0077b5; }
+.glass.facebook  { --brand-color: #1877f2; }
+.glass.contact   { --brand-color: #34C759; }
+.glass.github    { --brand-color: #ffffff; }
+.glass.instagram { --brand-color: #d62976; }
+
+/* Icon Styling */
+.glass .icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    fill: #fff;
+    transition: fill 0.3s;
+}
+
+.glass:hover .icon {
+    fill: var(--brand-color);
+}
+
+.glass.instagram:hover .icon { 
+    fill: url(#ig-gradient) !important;
+}
+
+/* Data Text Label */
+.glass::before {
+    content: attr(data-text);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Typography: Coolveltica for labels */
+    font-family: var(--font-subtitle);
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.glass:hover::before {
+    opacity: 1;
+}
+
+/* Mobile Responsiveness for Contact */
+@media screen and (max-width: 768px) {
+    .container {
+        transform: scale(0.8); 
+        flex-wrap: wrap;
+        margin-top: 50px;
+    }
+    .container:hover {
+        transform: scale(0.8); 
+    }
+    .glass {
+        margin: -10px !important; 
+    }
+    .container:hover .glass {
+        margin: 10px !important;
+    }
+}
+
+/* =========================================
+   EVENT CARDS (LARGE IMAGE & BLUR HOVER)
+   ========================================= */
+
+.event-card {
+  position: relative;
+  /* Responsive width, but larger max size */
+  width: 90%;
+  max-width: 700px; 
+  /* Taller height for large images */
+  height: 450px;
+  
+  border-radius: 16px;
+  overflow: hidden; /* Ensures image stays in corners */
+  perspective: 1000px;
+  
+  /* Base styles */
+  background-color: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* The Background Image */
+.card-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image fills card without stretching */
+    z-index: 0;
+    transition: transform 0.6s ease;
+}
+
+/* Hover State for Container & Image */
+.event-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 20px 50px rgba(255, 107, 0, 0.2);
+}
+
+/* Slight zoom effect on the image when hovering */
+.event-card:hover .card-bg-image {
+    transform: scale(1.1);
+}
+
+/* Title: Always visible at top */
+.event-card__title {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  z-index: 2; /* Above image and overlay */
+  
+  font-family: var(--font-title);
+  margin: 0;
+  font-size: 2rem;
+  color: var(--accent-color);
+  font-weight: 800;
+  text-transform: uppercase;
+  /* Add text shadow so it's readable over any image */
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* The Blurred Glass Overlay Content (Hidden initially) */
+.event-card__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Above image, below title */
+  
+  padding: 3rem 2rem; /* Extra padding at top to clear title */
+  box-sizing: border-box;
+  
+  /* THE BLUR EFFECT */
+  /* Semi-transparent dark background */
+  background-color: rgba(0, 0, 0, 0.6); 
+  /* The actual blur filter */
+  backdrop-filter: blur(8px); 
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  
+  /* Animation: Start rotated out at the bottom */
+  transform: rotateX(-90deg);
+  transform-origin: bottom;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Flex centers the description text vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Reveal Content on Hover */
+.event-card:hover .event-card__content {
+  transform: rotateX(0deg);
+}
+
+/* Description Text Styling */
+.event-card__description {
+  font-family: var(--font-body);
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary); /* White text for readability on dark blur */
+  line-height: 1.7;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Mobile adjustments for the large cards */
+@media screen and (max-width: 768px) {
+    .event-card {
+        height: 350px; /* Slightly shorter on mobile */
+    }
+    .event-card__title {
+        font-size: 1.5rem;
+        top: 15px;
+        left: 15px;
+    }
+    .event-card__content {
+         padding: 3rem 1.5rem;
+    }
+    .event-card__description {
+        font-size: 1rem;
+    }
+}
+
+
+/* The topic i chose specificaly is a basic portfolio website design with dark mode and glassmorphism effects. The concept itself was not too hard to implement. The hardest part was combining multiple different elements I saw online and unifying them into a cohesive design.  */
